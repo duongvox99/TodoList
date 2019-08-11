@@ -21,9 +21,9 @@ const TodoStack = createStackNavigator(
 );
 
 TodoStack.navigationOptions = {
-  tabBarLabel: 'All Todo',
+  tabBarLabel: 'All',
   tabBarIcon: ({ focused }) => (
-    <TabBarIcon focused={focused} name={{ focused } ? 'md-add-circle' : 'md-add-circle-outline'}
+    <TabBarIcon focused={focused} name={{ focused } ? 'ios-happy' : 'ios-sad'}
     />
   ),
 };

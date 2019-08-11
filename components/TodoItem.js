@@ -8,12 +8,12 @@ const ACTIVE_END_COLOR = ' 	rgb(50, 205, 50)';
 const COMPLETED_BEGIN_COLOR = 'rgb(30, 144, 255)';
 const COMPLETED_END_COLOR = 'rgb(65, 105, 225)';
 
-const TodoItem = ({ data: { id, status, body }, func_CompletedOrActive_OpenDetail, func_DeleteItem, func_OpenDetail}) => (
+const TodoItem = ({ dataTodoItem, dataTodoItem: { id, status, body }, func_CompletedOrActive_OpenDetail, func_DeleteItem, func_OpenDetail, funcSaveEdittedTodoItem}) => (
     <View style={styles.container}>
 
         <TouchableOpacity
             style={styles.button}
-            onPress={() => func_OpenDetail(id)}
+            onPress={() => func_OpenDetail(dataTodoItem)}
             onLongPress={() => func_DeleteItem(id)}
         >
 

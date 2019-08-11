@@ -1,83 +1,111 @@
 import React, { useState } from 'react';
-import { Text, View, TextInput, StyleSheet, ScrollView, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, KeyboardAvoidingView, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { AntDesign } from '@expo/vector-icons';
+import { Header } from 'react-navigation';
 
 export default function AddTodoScreen({ navigation }) {
-  const [bodyText, setBodyText] = useState('');
-  // const [detailText, setDetailText] = useState('');
+  const funcCreateNewTodoItem = navigation.getParam('funcCreateNewTodoItem');
 
-  const onAddTodo = () => {
-    let newTodo = {
-      
-      // detail: detailText,
-      
-      id: 0,
-      status: 'Active',
-      body: bodyText,
-    };
-    navigation.getParam('func_AddTodo')(newTodo);
-  };
+  const [bodyText, setBodyText] = useState("");
+  const [detailText, setDetailText] = useState("");
+
   return (
     <View style={styles.container}>
-      <KeyboardAvoidingView
-        enabled
-        behavior="padding"
-      // style={}
-      >
-        <ScrollView contentContainerStyle={styles.scrollview}>
-          <View syle={styles.inputWrapper}>
-
-            <TextInput
-              style={styles.todoInput}
-              editable={true}
-              multiline={true}
-              autoFocus={true}
-              value={bodyText}
-              onChangeText={text => setBodyText(text)}
-            />
+      <KeyboardAvoidingView enabled keyboardVerticalOffset={Header.HEIGHT + 20} behavior="padding" style={styles.form} >
+        <ScrollView>
+          <View style={styles.bodyWrapper}>
+            <View style={styles.statusWrapper}>
+              <AntDesign name={'star'} size={30} color={'green'} style={{ textAlign: 'center' }}></AntDesign>
+            </View>
+            <View style={styles.bodyTextWrapper}>
+              <TextInput
+                style={styles.bodyTextInput}
+                editable={true}
+                multiline={true}
+                value={bodyText}
+                placeholder="What is your todo?"
+                blurOnSubmit={true}
+                returnKeyType="done"
+                onChangeText={text => setBodyText(text)}
+              />
+            </View>
           </View>
-          {/* <View syle={styles.inputWrapper}>
-            <TextInput
-              style={styles.todoInput}
-              editable={true}
-              multiline={true}
-              autoFocus={true}
-              value={detailText}
-              onChangeText={text => setDetailText(text)}
-            />
-          </View> */}
-          <TouchableOpacity style={styles.button} onPress={onAddTodo}>
-            <Text style={styles.buttonText}>Submit</Text>
+          <View style={styles.detailWrapper}>
+            <View style={styles.iconDetailWrapper}>
+              <AntDesign name={'menuunfold'} size={26} style={{ textAlign: 'center' }}></AntDesign>
+            </View>
+            <View style={styles.detailTextWrapper}>
+              <TextInput
+                style={styles.detailTextInput}
+                editable={true}
+                multiline={true}
+                value={detailText}
+                placeholder="More detail"
+                returnKeyType="done"
+                onChangeText={text => setDetailText(text)}
+              />
+            </View>
+          </View>
+          <TouchableOpacity style={styles.button} onPress={() => funcCreateNewTodoItem(bodyText, detailText)}>
+            <Text style={styles.buttonText}>Create</Text>
           </TouchableOpacity>
         </ScrollView>
       </KeyboardAvoidingView>
     </View>
-  )
+  );
 }
 
-AddTodoScreen.navigationOptions = ({ navigation }) => {
+AddTodoScreen.navigationOptions = ({ navigation}) => {
   return {
-    title: 'Add new Todo',
+    title: 'Add new todo',
   }
+};
+
+const onPress_DeleteItemInDetail = (navigation) => {
+  let id = navigation.getParam('id');
+  navigation.getParam('func_DeleteItem')(id);
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  scrollview: {
-    alignContent: 'center',
-    justifyContent: 'center',
+  bodyWrapper: {
+    flexDirection: 'row',
   },
-  inputWrapper: {
-    alignContent: 'center',
-    justifyContent: 'center',
+  statusWrapper: {
+    flex: 0.1,
+    padding: 10
   },
-  todoInput: {
+  bodyTextWrapper: {
+    flex: 0.9,
+    paddingTop: 10,
+    paddingRight: 10
+  },
+  bodyTextInput: {
     width: '100%',
     minHeight: 40,
-    borderWidth: 1,
-    borderColor: 'grey',
-    fontSize: 22
+    fontSize: 22,
+    fontWeight: '700'
+  },
+  detailWrapper: {
+    flexDirection: 'row',
+  },
+  iconDetailWrapper: {
+    flex: 0.2,
+    paddingTop: 20,
+    paddingLeft: 10,
+  },
+  detailTextWrapper: {
+    flex: 0.8,
+    paddingTop: 10,
+    paddingRight: 10,
+    paddingBottom: 10,
+  },
+  detailTextInput: {
+    width: '100%',
+    minHeight: 40,
+    fontSize: 20,
   },
   button: {
     height: 50,
@@ -89,6 +117,11 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: 'white',
-    fontWeight: 'bold'
-  }
+    fontSize: 30
+  },
+  form: {
+    flex: 1,
+    justifyContent: 'space-between',
+  },
+
 });

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { Text, View, StyleSheet, StatusBar, ScrollView, Alert, TouchableOpacity, Dimensions } from 'react-native';
-
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Text, View, StyleSheet, StatusBar, ScrollView, Alert, TouchableOpacity, Dimensions, ImageBackground } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
 import TodoItem from '../components/TodoItem';
 
@@ -13,28 +12,13 @@ export default function TodoScreen({ navigation }) {
   const [numOfActive, setNumOfActive] = useState(TODOS.filter(item => item.status === 'Active').length);
   const [numOfCompleted, setNumOfCompleted] = useState(TODOS.filter(item => item.status === 'Done').length);
 
+  // navigation.setParams({ data: 'abc' });
+  
   const onPress_CompletedOrActive_OpenDetail = (id) => {
     const foundIndex = todoList.findIndex(item => item.id === id);
 
-    let newTodoList = Array.from(todoList);
-    newTodoList[foundIndex].status = (newTodoList[foundIndex].status === 'Done' ? 'Active' : 'Done');
-
-    setTodoList(newTodoList);
-    setNumOfActive(newTodoList.filter(item => item.status === 'Active').length);
-    setNumOfCompleted(newTodoList.filter(item => item.status === 'Done').length);
+    setTodoItemData(id, (todoList[foundIndex].status === 'Done' ? 'Active' : 'Done'), todoList[foundIndex].body, todoList[foundIndex].detail);
   };
-
-  const onPress_AddTodo = (newTodo) => {
-    let newTodoList = todoList.unshift(newTodo);
-    
-    setTodoList(newTodoList);
-    setNumOfActive(newTodoList.filter(item => item.status === 'Active').length);
-    setNumOfCompleted(newTodoList.filter(item => item.status === 'Done').length);
-  };
-
-  const onPress_AddTodoScreen = () => {
-    navigation.navigate("Add", { func_AddTodo: (() => onPress_AddTodo()) });
-  }
 
   const onPress_DeleteItem = (id) => {
     Alert.alert(
@@ -46,14 +30,7 @@ export default function TodoScreen({ navigation }) {
         },
         {
           text: 'OK', onPress: () => {
-            const foundIndex = todoList.findIndex(item => item.id === id);
-
-            let newTodoList = Array.from(todoList);
-            newTodoList.splice(foundIndex, 1);
-
-            setTodoList(newTodoList);
-            setNumOfActive(newTodoList.filter(item => item.status === 'Active').length);
-            setNumOfCompleted(newTodoList.filter(item => item.status === 'Done').length);
+            setTodoItemData(id, "", "", "");
 
             // in case delete in detail screen, after accept to delete, it will go back todo screen
             navigation.navigate("Todo");
@@ -65,51 +42,142 @@ export default function TodoScreen({ navigation }) {
     );
   };
 
-  const onPress_OpenDetail = (id) => {
-    navigation.navigate("Detail", { func_DeleteItem: (() => onPress_DeleteItem(id)), id: id });
+  const onPress_OpenDetail = (dataTodoItem) => {
+    const { id, status, body, detail } = dataTodoItem;
+    navigation.navigate("Detail", {
+      dataTodoItem: dataTodoItem,
+      func_DeleteItem: (() => onPress_DeleteItem(id)),
+      funcSaveEdittedTodoItem: ((id, status, body, detail) => onPress_EditTodoItem(id, status, body, detail))
+    });
   };
+
+  const onPress_AddTodoScreen = () => {
+    navigation.navigate("Add", { funcCreateNewTodoItem: ((body, detail) => onPress_CreateNewTodoItem(body, detail)) });
+  }
+
+  const onPress_CreateNewTodoItem = (body, detail) => {
+    setTodoItemData(todoList[0].id - 1, 'Active', body, detail) ? navigation.navigate("Todo") : null;
+  };
+
+  const onPress_EditTodoItem = (id, status, body, detail) => {
+    setTodoItemData(id, status, body, detail) ? navigation.navigate("Todo") : null;
+  };
+
+  const setTodoItemData = (id, status, body, detail) => {
+    // status = "" -> delete this item with this is
+
+    const foundIndex = todoList.findIndex(item => item.id === id);
+    if (foundIndex === -1) {
+      if (body == "") {
+        Alert.alert(
+          'Warning',
+          'Invalid input! Please check again...',
+          [
+            {
+              text: 'OK', onPress: () => {
+                return false;
+              }
+            },
+          ],
+        );
+      }
+      else {
+        let newItem = {
+          id: todoList[0].id - 1,
+          status: 'Active',
+          body: body,
+          detail: detail
+        };
+        let newTodoList = Array.from(todoList);
+        newTodoList.unshift(newItem);
+
+        setTodoList(newTodoList);
+        setNumOfActive(newTodoList.filter(item => item.status === 'Active').length);
+        setNumOfCompleted(newTodoList.filter(item => item.status === 'Done').length);
+
+        return true;
+      }
+
+    }
+    else {
+      let newTodoList = Array.from(todoList);
+
+      if (status == "") {
+        newTodoList.splice(foundIndex, 1);
+      }
+      else {
+        if (body == "") {
+          Alert.alert(
+            'Warning',
+            'Invalid input! Please check again...',
+            [
+              {
+                text: 'OK', onPress: () => {
+                  return false;
+                }
+              },
+            ],
+          );
+        }
+        else {
+          newTodoList[foundIndex].status = status;
+          newTodoList[foundIndex].body = body;
+          newTodoList[foundIndex].detail = detail;
+
+          setTodoList(newTodoList);
+          setNumOfActive(newTodoList.filter(item => item.status === 'Active').length);
+          setNumOfCompleted(newTodoList.filter(item => item.status === 'Done').length);
+
+          return true;
+        }
+      }
+    }
+  }
 
   return (
 
     <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollview}>
-        <View style={styles.activeWrapper}>
-          <Text style={styles.text}>Active ({numOfActive})</Text>
-        </View>
+      <ImageBackground source={require('../utils/background.jpg')} style={{ width: '100%', height: '100%' }}>
+        <ScrollView contentContainerStyle={styles.scrollview}>
+          <View style={styles.activeWrapper}>
+            <Text style={styles.text}>Active ({numOfActive})</Text>
+          </View>
 
-        {todoList.map(item => {
-          return (item.status === 'Active'
-            ? (<TodoItem
-              key={item.id}
-              data={item}
-              func_CompletedOrActive_OpenDetail={onPress_CompletedOrActive_OpenDetail}
-              func_DeleteItem={onPress_DeleteItem}
-              func_OpenDetail={onPress_OpenDetail} />)
-            : null)
-        })}
+          {todoList.map(item => {
+            return (item.status === 'Active'
+              ? (<TodoItem
+                key={item.id}
+                dataTodoItem={item}
+                func_CompletedOrActive_OpenDetail={onPress_CompletedOrActive_OpenDetail}
+                func_DeleteItem={onPress_DeleteItem}
+                func_OpenDetail={onPress_OpenDetail} />)
+              : null)
+          })}
 
-        <View style={styles.completedWrapper}>
-          <Text style={styles.text}>Completed ({numOfCompleted})</Text>
-        </View>
+          <View style={styles.completedWrapper}>
+            <Text style={styles.text}>Completed ({numOfCompleted})</Text>
+          </View>
 
-        {todoList.map(item => {
-          return (item.status === 'Done'
-            ? (<TodoItem
-              key={item.id}
-              data={item}
-              func_CompletedOrActive_OpenDetail={onPress_CompletedOrActive_OpenDetail}
-              func_DeleteItem={onPress_DeleteItem}
-              func_OpenDetail={onPress_OpenDetail} />)
-            : null)
-        })}
-      </ScrollView>
+          {todoList.map(item => {
+            return (item.status === 'Done'
+              ? (<TodoItem
+                key={item.id}
+                dataTodoItem={item}
+                func_CompletedOrActive_OpenDetail={onPress_CompletedOrActive_OpenDetail}
+                func_DeleteItem={onPress_DeleteItem}
+                func_OpenDetail={onPress_OpenDetail} />)
+              : null)
+          })}
+        </ScrollView>
 
-      <TouchableOpacity
-        style={styles.addTouchable}
-        onPress={() => onPress_AddTodoScreen()}
-      >
-        <MaterialCommunityIcons name={'checkbox-blank-outline'} size={25} ></MaterialCommunityIcons>
-      </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.addTouchable}
+          onPress={() => onPress_AddTodoScreen()}
+        >
+          <Ionicons name={'md-add'} size={50} ></Ionicons>
+        </TouchableOpacity>
+
+      </ImageBackground>
     </View>
   );
 }
@@ -125,13 +193,16 @@ const styles = StyleSheet.create({
     paddingTop: StatusBar.currentHeight,
   },
   scrollview: {
-    paddingTop: Dimensions.get('window').height
+    paddingTop: Dimensions.get('window').height,
+    // backgroundColor: 'transparent'
   },
   activeWrapper: {
     borderWidth: 2,
+    borderRadius: 10,
 
     shadowRadius: 5,
     borderColor: 'grey',
+
     shadowOpacity: 0.90,
     alignItems: 'center',
     backgroundColor: 'white',
@@ -142,6 +213,7 @@ const styles = StyleSheet.create({
   },
   completedWrapper: {
     borderWidth: 2,
+    borderRadius: 10,
 
     shadowRadius: 5,
     borderColor: 'grey',
@@ -156,12 +228,13 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   text: {
+    padding: 10,
     fontSize: 25,
     fontWeight: '700'
   },
   addTouchable: {
-    borderWidth: 1,
-    borderColor: 'rgba(0,0,0,0.2)',
+    borderWidth: 2,
+    borderColor: '#3f7312',
     width: 70,
     height: 70,
 
@@ -172,7 +245,7 @@ const styles = StyleSheet.create({
     bottom: 10,
     right: 10,
 
-    backgroundColor: '#fff',
+    backgroundColor: '#89eb34',
     borderRadius: 35,
-  }
+  },
 });

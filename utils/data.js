@@ -2,42 +2,50 @@ const TODOS =  [
   {
     id: 1,
     status: 'Done',
-    body: '1.Read Instructions'
+    body: 'Read Instructions',
+    detail: 'Lorem ipsum dolor sit amet, feugiat massa convallis nonummy rutrum. Neque penatibus, eget ullamcorper suspendisse aliquet. Orci lacinia quis orci interdum, vestibulum sed facilisis mauris leo, ut tellus mauris sit hymenaeos vitae. Eget vestibulum. Consectetuer imperdiet velit sed at amet, tortor dignissim neque. Consequat ac convallis ante.'
   },
   {
     id: 2,
     status: 'Done',
-    body: '2.Think a bit'
+    body: 'Think a bit',
+    detail: 'Lorem ipsum dolor sit amet, feugiat massa convallis nonummy rutrum. Neque penatibus, eget ullamcorper suspendisse aliquet. Orci lacinia quis orci interdum, vestibulum sed facilisis mauris leo, ut tellus mauris sit hymenaeos vitae. Eget vestibulum. Consectetuer imperdiet velit sed at amet, tortor dignissim neque. Consequat ac convallis ante.'
   },
   {
     id: 3,
     status: 'Done',
-    body: "3.Google 'How to build todo app"
+    body: "Google 'How to build todo app",
+    detail: 'Lorem ipsum dolor sit amet, feugiat massa convallis nonummy rutrum. Neque penatibus, eget ullamcorper suspendisse aliquet. Orci lacinia quis orci interdum, vestibulum sed facilisis mauris leo, ut tellus mauris sit hymenaeos vitae. Eget vestibulum. Consectetuer imperdiet velit sed at amet, tortor dignissim neque. Consequat ac convallis ante.'
   },
   {
     id: 4,
     status: 'Done',
-    body: '4.Read results from Google'
+    body: 'Read results from Google',
+    detail: 'Lorem ipsum dolor sit amet, feugiat massa convallis nonummy rutrum. Neque penatibus, eget ullamcorper suspendisse aliquet. Orci lacinia quis orci interdum, vestibulum sed facilisis mauris leo, ut tellus mauris sit hymenaeos vitae. Eget vestibulum. Consectetuer imperdiet velit sed at amet, tortor dignissim neque. Consequat ac convallis ante.'
   },
   {
     id: 5,
     status: 'Done',
-    body: "5.Google 'How to build todo app using React Native"
+    body: "Google 'How to build todo app using React Native",
+    detail: 'Lorem ipsum dolor sit amet, feugiat massa convallis nonummy rutrum. Neque penatibus, eget ullamcorper suspendisse aliquet. Orci lacinia quis orci interdum, vestibulum sed facilisis mauris leo, ut tellus mauris sit hymenaeos vitae. Eget vestibulum. Consectetuer imperdiet velit sed at amet, tortor dignissim neque. Consequat ac convallis ante.'
   },
   {
     id: 6,
     status: 'Active',
-    body: '6.Read results from Google again'
+    body: 'Read results from Google again',
+    detail: 'Lorem ipsum dolor sit amet, feugiat massa convallis nonummy rutrum. Neque penatibus, eget ullamcorper suspendisse aliquet. Orci lacinia quis orci interdum, vestibulum sed facilisis mauris leo, ut tellus mauris sit hymenaeos vitae. Eget vestibulum. Consectetuer imperdiet velit sed at amet, tortor dignissim neque. Consequat ac convallis ante.'
   },
   {
     id: 7,
     status: 'Active',
-    body: '7.Spend some more time thinking'
+    body: 'Spend some more time thinking',
+    detail: 'Lorem ipsum dolor sit amet, feugiat massa convallis nonummy rutrum. Neque penatibus, eget ullamcorper suspendisse aliquet. Orci lacinia quis orci interdum, vestibulum sed facilisis mauris leo, ut tellus mauris sit hymenaeos vitae. Eget vestibulum. Consectetuer imperdiet velit sed at amet, tortor dignissim neque. Consequat ac convallis ante.'
   },
   {
     id: 8,
     status: 'Active',
-    body: '8.Use knowledge gained at CoderSchool to build new todo app'
+    body: 'Use knowledge gained at CoderSchool to build new todo app',
+    detail: 'Lorem ipsum dolor sit amet, feugiat massa convallis nonummy rutrum. Neque penatibus, eget ullamcorper suspendisse aliquet. Orci lacinia quis orci interdum, vestibulum sed facilisis mauris leo, ut tellus mauris sit hymenaeos vitae. Eget vestibulum. Consectetuer imperdiet velit sed at amet, tortor dignissim neque. Consequat ac convallis ante.'
   }
 ];
 
